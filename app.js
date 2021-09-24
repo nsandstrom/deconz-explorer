@@ -1,20 +1,27 @@
 import { apiConfiguration } from './templates.js'
 
+let apiPath
+let elements = []
+
 window.onload = () => {
-  document.querySelector('div.apiConfig').addEventListener('click', handleApiConfigClick)
+  document.querySelector('div.apiConfig').addEventListener('click', (e) => handleApiConfigClick(e, updateApiPath))
 
-  const apiPath = findCookie('deconz_api_path') || ''
+  apiPath = findCookie('deconz_api_path') || ''
 
-  renderApiConfig(apiPath)
-
-  const apiConfigDiv = document.querySelector('div.apiConfig')
-
-  if (apiPath) {
-    apiConfigDiv.classList.add('hidden')
-  }
+  render()
 }
 
-const handleApiConfigClick = (e) => {
+const updateApiPath = (path) => {
+  apiPath = path
+  if (!path) {
+    document.cookie = 'deconz_api_path=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+  } else {
+    document.cookie = `deconz_api_path=${path}`
+  }
+  render()
+}
+
+const handleApiConfigClick = (e, updateApiPath) => {
   const button = e.target.closest('button')
   e.preventDefault()
 
@@ -22,20 +29,28 @@ const handleApiConfigClick = (e) => {
 
   if (button.name === 'save') {
     const input = document.querySelector("input[name='api_path']")
-    document.cookie = `deconz_api_path=${input.value}`
+    apiPath = input.value
     console.log('New api path:', input.value)
+    render()
   }
 
   if (button.name === 'clear') {
-    document.cookie = 'deconz_api_path=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-
-    renderApiConfig('')
+    updateApiPath('')
   }
 
   if (button.name === 'show') {
     const div = document.querySelector('div.apiConfig')
     div.classList.toggle('hidden')
   }
+}
+const render = () => {
+  console.log('Rerender with path:', apiPath)
+  const apiConfigDiv = document.querySelector('div.apiConfig')
+
+  if (apiPath) {
+    apiConfigDiv.classList.add('hidden')
+  }
+  renderApiConfig(apiPath)
 }
 
 const renderApiConfig = (path) => {
