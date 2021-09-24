@@ -1,0 +1,15 @@
+div.apiConfig form {
+	border: solid 1px black;
+	padding: 10px;
+}
+
+div.apiConfig button.toggle::before {
+	content: "  Hide  "; /* Insert content that looks like bullets */
+}
+div.apiConfig.hidden button.toggle::before {
+	content: "  Show  "; /* Insert content that looks like bullets */
+}
+
+div.apiConfig.hidden form {
+	display: none;
+}
