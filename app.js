@@ -29,9 +29,8 @@ const handleApiConfigClick = (e, updateApiPath) => {
 
   if (button.name === 'save') {
     const input = document.querySelector("input[name='api_path']")
-    apiPath = input.value
-    console.log('New api path:', input.value)
-    render()
+    updateApiPath(input.value)
+   
   }
 
   if (button.name === 'clear') {
@@ -43,8 +42,8 @@ const handleApiConfigClick = (e, updateApiPath) => {
     div.classList.toggle('hidden')
   }
 }
+
 const render = () => {
-  console.log('Rerender with path:', apiPath)
   const apiConfigDiv = document.querySelector('div.apiConfig')
 
   if (apiPath) {
