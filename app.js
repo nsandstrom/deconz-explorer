@@ -1,10 +1,10 @@
-import { apiConfiguration } from './templates.js'
+import { ApiConfiguration } from './configuration.js'
 
 let apiPath
 let elements = []
 
 window.onload = () => {
-  document.querySelector('div.apiConfig').addEventListener('click', (e) => handleApiConfigClick(e, updateApiPath))
+  ApiConfiguration.init(updateApiPath)
 
   apiPath = findCookie('deconz_api_path') || ''
 
@@ -21,42 +21,10 @@ const updateApiPath = (path) => {
   render()
 }
 
-const handleApiConfigClick = (e, updateApiPath) => {
-  const button = e.target.closest('button')
-  e.preventDefault()
-
-  if (!button) return
-
-  if (button.name === 'save') {
-    const input = document.querySelector("input[name='api_path']")
-    updateApiPath(input.value)
-   
-  }
-
-  if (button.name === 'clear') {
-    updateApiPath('')
-  }
-
-  if (button.name === 'show') {
-    const div = document.querySelector('div.apiConfig')
-    div.classList.toggle('hidden')
-  }
-}
-
 const render = () => {
   const apiConfigDiv = document.querySelector('div.apiConfig')
 
-  if (apiPath) {
-    apiConfigDiv.classList.add('hidden')
-  }
-  renderApiConfig(apiPath)
-}
-
-const renderApiConfig = (path) => {
-  const params = { path }
-
-  const div = document.querySelector('div.apiConfig')
-  div.innerHTML = apiConfiguration(params)
+  ApiConfiguration.render(apiPath)
 }
 
 const findCookie = (name) => {
