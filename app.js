@@ -1,12 +1,17 @@
 import { ApiConfiguration } from './configuration.js'
+import { Lights } from './lights.js'
 
 let apiPath
 let elements = []
+let lights = []
 
 window.onload = () => {
   ApiConfiguration.init(updateApiPath)
 
   apiPath = findCookie('deconz_api_path') || ''
+
+  getElements()
+  setInterval(getElements, 5000)
 
   render()
 }
@@ -21,10 +26,26 @@ const updateApiPath = (path) => {
   render()
 }
 
-const render = () => {
-  const apiConfigDiv = document.querySelector('div.apiConfig')
+const getElements = async () => {
+  if (!apiPath) return
 
+  const result = await fetch(apiPath)
+
+  if (!result.ok) {
+    throw 'Api reponse not ok'
+  }
+
+  const data = await result.json()
+
+  lights = mapToList(data.lights)
+
+  Lights.render(lights)
+}
+
+const render = () => {
   ApiConfiguration.render(apiPath)
+
+  Lights.render(lights)
 }
 
 const findCookie = (name) => {
@@ -38,3 +59,5 @@ const findCookie = (name) => {
 
   return match.value
 }
+
+const mapToList = (uglyList) => Object.entries(uglyList).map(([id, params]) => ({ id, ...params }))

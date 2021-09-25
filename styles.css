@@ -4,12 +4,33 @@ div.apiConfig form {
 }
 
 div.apiConfig button.toggle::before {
-	content: "  Hide  "; /* Insert content that looks like bullets */
+	content: '  Hide  ';
 }
 div.apiConfig.hidden button.toggle::before {
-	content: "  Show  "; /* Insert content that looks like bullets */
+	content: '  Show  ';
 }
 
 div.apiConfig.hidden form {
 	display: none;
+}
+
+div.lightList li {
+	padding: 5px;
+}
+
+div.lightList li h3 {
+	display: inline;
+	margin-block-end: 0;
+	margin-block-start: 0;
+}
+
+div.lightList span.indicator {
+	width: 15px;
+	height: 15px;
+	border: 1px solid #aaa;
+	border-radius: 50%;
+	display: inline-block;
+}
+div.lightList .on span.indicator {
+	background: #fa0;
 }
