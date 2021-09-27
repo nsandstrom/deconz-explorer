@@ -1,5 +1,8 @@
-const init = (apiCall) => {
+let globalData
+
+const init = (apiCall, _globalData) => {
   document.querySelector('div.lightList ul').addEventListener('click', (e) => handleLightListClick(e, apiCall))
+  globalData = _globalData
 }
 
 const handleLightListClick = (e, apiCall) => {
@@ -17,9 +20,11 @@ const handleLightListClick = (e, apiCall) => {
   console.log('flash light ', id)
 }
 
-const render = (lights) => {
+const render = () => {
   const div = document.querySelector('div.lightList')
   const ul = div.querySelector('ul')
+
+  const { lights } = globalData
 
   if (lights.length == 0) {
     div.classList.add('hidden')

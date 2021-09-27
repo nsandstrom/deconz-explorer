@@ -2,12 +2,14 @@ import { ApiConfiguration } from './configuration.js'
 import { Lights } from './lights.js'
 
 let apiPath
-let elements = []
-let lights = []
+
+let globalData = {
+  lights: []
+}
 
 window.onload = () => {
   ApiConfiguration.init(updateApiPath)
-  Lights.init(deconzPut)
+  Lights.init(deconzPut, globalData)
 
   apiPath = findCookie('deconz_api_path') || ''
 
@@ -38,9 +40,9 @@ const getElements = async () => {
 
   const data = await result.json()
 
-  lights = mapToList(data.lights)
+  globalData.lights = mapToList(data.lights)
 
-  Lights.render(lights)
+  Lights.render()
 }
 
 const deconzPut = async (path, payload) => {
@@ -58,7 +60,7 @@ const deconzPut = async (path, payload) => {
 const render = () => {
   ApiConfiguration.render(apiPath)
 
-  Lights.render(lights)
+  Lights.render()
 }
 
 const findCookie = (name) => {
