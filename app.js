@@ -7,6 +7,7 @@ let lights = []
 
 window.onload = () => {
   ApiConfiguration.init(updateApiPath)
+  Lights.init(deconzPut)
 
   apiPath = findCookie('deconz_api_path') || ''
 
@@ -40,6 +41,18 @@ const getElements = async () => {
   lights = mapToList(data.lights)
 
   Lights.render(lights)
+}
+
+const deconzPut = async (path, payload) => {
+  const url = apiPath + path
+
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
 }
 
 const render = () => {
