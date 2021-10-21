@@ -1,17 +1,13 @@
 import { ApiConfiguration } from './configuration.js'
 import { Lights } from './lights.js'
 
-let apiPath
-
 let globalData = {
   lights: []
 }
 
 window.onload = () => {
-  ApiConfiguration.init(updateApiPath)
+  ApiConfiguration.init(apiPathIsChangedCallback)
   Lights.init(deconzPut, globalData)
-
-  apiPath = findCookie('deconz_api_path') || ''
 
   getElements()
   setInterval(getElements, 5000)
@@ -19,17 +15,13 @@ window.onload = () => {
   render()
 }
 
-const updateApiPath = (path) => {
-  apiPath = path
-  if (!path) {
-    document.cookie = 'deconz_api_path=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-  } else {
-    document.cookie = `deconz_api_path=${path}`
-  }
+const apiPathIsChangedCallback = () => {
+  getElements()
   render()
 }
 
 const getElements = async () => {
+  const apiPath = ApiConfiguration.config.apiPath
   if (!apiPath) return
 
   const result = await fetch(apiPath)
@@ -46,7 +38,7 @@ const getElements = async () => {
 }
 
 const deconzPut = async (path, payload) => {
-  const url = apiPath + path
+  const url = ApiConfiguration.config.apiPath + path
 
   const response = await fetch(url, {
     method: 'PUT',
@@ -58,21 +50,9 @@ const deconzPut = async (path, payload) => {
 }
 
 const render = () => {
-  ApiConfiguration.render(apiPath)
+  ApiConfiguration.render()
 
   Lights.render()
-}
-
-const findCookie = (name) => {
-  const match = document.cookie
-    .split(';')
-    .map((a) => a.split('='))
-    .map(([key, value]) => ({ key: key.trim(), value }))
-    .find((c) => c.key === name)
-
-  if (!match || !match.value || match.value === '') return undefined
-
-  return match.value
 }
 
 const mapToList = (uglyList) => Object.entries(uglyList).map(([id, params]) => ({ id, ...params }))

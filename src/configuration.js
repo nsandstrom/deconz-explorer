@@ -1,8 +1,17 @@
-const init = (updateApiPath) => {
-  document.querySelector('div.apiConfig').addEventListener('click', (e) => handleApiConfigClick(e, updateApiPath))
+// This module handles all configuration for the app
+// *Api path
+
+const _config = { apiPath: '' }
+
+const init = (apiPathIsChangedCallback) => {
+  document
+    .querySelector('div.apiConfig')
+    .addEventListener('click', (e) => handleApiConfigClick(e, apiPathIsChangedCallback))
+
+  _config.apiPath = findCookie('deconz_api_path') || ''
 }
 
-const handleApiConfigClick = (e, updateApiPath) => {
+const handleApiConfigClick = (e, apiPathIsChangedCallback) => {
   const button = e.target.closest('button')
   e.preventDefault()
 
@@ -10,11 +19,11 @@ const handleApiConfigClick = (e, updateApiPath) => {
 
   if (button.name === 'save') {
     const input = document.querySelector("input[name='api_path']")
-    updateApiPath(input.value)
+    updateApiPath(input.value, apiPathIsChangedCallback)
   }
 
   if (button.name === 'clear') {
-    updateApiPath('')
+    updateApiPath('', apiPathIsChangedCallback)
   }
 
   if (button.name === 'show') {
@@ -23,7 +32,18 @@ const handleApiConfigClick = (e, updateApiPath) => {
   }
 }
 
-const render = (path) => {
+const updateApiPath = (path, apiPathIsChangedCallback) => {
+  _config.apiPath = path
+  if (!path) {
+    document.cookie = 'deconz_api_path=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+  } else {
+    document.cookie = `deconz_api_path=${path}`
+    apiPathIsChangedCallback()
+  }
+}
+
+const render = () => {
+  const path = _config.apiPath
   const div = document.querySelector('div.apiConfig')
 
   if (path) {
@@ -44,6 +64,18 @@ const buildInnerHTML = (params) => `
   </form>
   `
 
-const ApiConfiguration = { init, render }
+const findCookie = (name) => {
+  const match = document.cookie
+    .split(';')
+    .map((a) => a.split('='))
+    .map(([key, value]) => ({ key: key.trim(), value }))
+    .find((c) => c.key === name)
+
+  if (!match || !match.value || match.value === '') return undefined
+
+  return match.value
+}
+
+const ApiConfiguration = { init, render, config: _config }
 
 export { ApiConfiguration }
