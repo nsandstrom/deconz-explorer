@@ -1,4 +1,5 @@
 import { ApiConfiguration } from './configuration.js'
+import { Deconz } from './deconz.js'
 import { Lights } from './lights.js'
 
 let globalData = {
@@ -21,16 +22,7 @@ const apiPathIsChangedCallback = () => {
 }
 
 const getElements = async () => {
-  const apiPath = ApiConfiguration.config.apiPath
-  if (!apiPath) return
-
-  const result = await fetch(apiPath)
-
-  if (!result.ok) {
-    throw 'Api reponse not ok'
-  }
-
-  const data = await result.json()
+  const data = await Deconz.getElements()
 
   globalData.lights = mapToList(data.lights)
 
@@ -38,15 +30,7 @@ const getElements = async () => {
 }
 
 const deconzPut = async (path, payload) => {
-  const url = ApiConfiguration.config.apiPath + path
-
-  const response = await fetch(url, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  })
+  await Deconz.put(path, payload)
 }
 
 const render = () => {
