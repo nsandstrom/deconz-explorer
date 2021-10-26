@@ -1,7 +1,7 @@
 let globalData
 
 const init = (apiCall, _globalData) => {
-  document.querySelector('div.lightList ul').addEventListener('click', (e) => handleLightListClick(e, apiCall))
+  document.querySelector('div.deviceList ul').addEventListener('click', (e) => handleLightListClick(e, apiCall))
   globalData = _globalData
 }
 
@@ -21,7 +21,8 @@ const handleLightListClick = (e, apiCall) => {
 }
 
 const render = () => {
-  const div = document.querySelector('div.lightList')
+
+  const div = document.querySelector('div.deviceList')
   const ul = div.querySelector('ul')
 
   const { lights } = globalData
@@ -41,7 +42,7 @@ const drawLight = (params) => {
   const listItem = document.createElement('li')
   listItem.innerHTML = lightTemplate(params)
   listItem.id = params.id
-  listItem.classList.add('light-list-item')
+  listItem.classList.add('device-list-item')
 
   if (params.state.on) {
     listItem.classList.add('on')

@@ -28,7 +28,7 @@ const handleApiConfigClick = (e, apiPathIsChangedCallback) => {
 
   if (button.name === 'show') {
     const div = document.querySelector('div.apiConfig')
-    div.classList.toggle('hidden')
+    div.classList.toggle('minimized')
   }
 }
 
@@ -47,7 +47,7 @@ const render = () => {
   const div = document.querySelector('div.apiConfig')
 
   if (path) {
-    div.classList.add('hidden')
+    div.classList.add('minimized')
   }
 
   const params = { path }
