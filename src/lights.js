@@ -1,3 +1,5 @@
+import { Helpers } from './helpers.js'
+
 let globalData
 
 const init = (apiCall, _globalData) => {
@@ -35,7 +37,7 @@ const render = () => {
 
   const listItems = lights.map(drawLight)
 
-  ul.replaceChildren(...listItems)
+  Helpers.replaceChildren(ul, listItems)
 }
 
 const drawLight = (params) => {
