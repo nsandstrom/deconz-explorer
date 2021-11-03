@@ -14,6 +14,10 @@ div.apiConfig.minimized form {
 	display: none;
 }
 
+.hidden {
+	display: none;
+}
+
 div.deviceList li {
 	padding: 5px;
 }
@@ -33,4 +37,12 @@ div.deviceList span.indicator {
 }
 div.deviceList .on span.indicator {
 	background: #fa0;
+}
+
+.device-list-item .item-settings {
+	display: none;
+}
+
+.device-list-item.expanded .item-settings {
+	display: block;
 }
